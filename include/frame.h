@@ -27,7 +27,6 @@ public:
     void move(Vector2f offset)
     {
         position += offset;
-        size     += offset;
     }
 
     void changeStatus()

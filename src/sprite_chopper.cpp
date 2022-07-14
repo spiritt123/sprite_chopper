@@ -64,6 +64,29 @@ void SpriteChopper::moveSelectedFrames(Vector2f offset)
         }
     }
 }
+    
+void SpriteChopper::movePositionPointInSelectedFrames(Vector2f offset)
+{
+    for (auto &f : _frames)
+    {
+        if(f.status == STATUS::ACTIVE)
+        {
+            f.position += offset;
+            f.size     -= offset;
+        }
+    }
+}
+
+void SpriteChopper::moveSizePointInSelectedFrames(Vector2f offset)
+{
+    for (auto &f : _frames)
+    {
+        if(f.status == STATUS::ACTIVE)
+        {
+            f.size += offset;
+        }
+    }
+}
 
 const Frame& SpriteChopper::getCurrentFrame()
 {

@@ -20,6 +20,8 @@ public:
     void addNewFrame(const Frame &frame);
 
     void moveSelectedFrames(Vector2f offset);
+    void movePositionPointInSelectedFrames(Vector2f offset);
+    void moveSizePointInSelectedFrames(Vector2f offset);
 
     const Frame& getCurrentFrame();
     bool isSelectStatus();

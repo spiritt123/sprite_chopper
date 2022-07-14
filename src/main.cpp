@@ -44,12 +44,20 @@ int main(int argc, char* argv[])
             if (event.type == sf::Event::KeyPressed)
             {
                 if (event.key.code == sf::Keyboard::Escape) window.close();             
-                if (event.key.code == sf::Keyboard::S) sc.save();
-                if (event.key.code == sf::Keyboard::L) sc.load();
-                if (event.key.code == sf::Keyboard::Up)    sc.moveSelectedFrames({0, -1});
-                if (event.key.code == sf::Keyboard::Down)  sc.moveSelectedFrames({0,  1});
-                if (event.key.code == sf::Keyboard::Left)  sc.moveSelectedFrames({-1, 0});
-                if (event.key.code == sf::Keyboard::Right) sc.moveSelectedFrames({ 1, 0});
+                else if (event.key.code == sf::Keyboard::S) sc.save();
+                else if (event.key.code == sf::Keyboard::R) sc.load();
+                else if (event.key.shift && event.key.code == sf::Keyboard::Up)    sc.moveSizePointInSelectedFrames({0, -1});
+                else if (event.key.shift && event.key.code == sf::Keyboard::Down)  sc.moveSizePointInSelectedFrames({0,  1});
+                else if (event.key.shift && event.key.code == sf::Keyboard::Left)  sc.moveSizePointInSelectedFrames({-1, 0});
+                else if (event.key.shift && event.key.code == sf::Keyboard::Right) sc.moveSizePointInSelectedFrames({ 1, 0});
+                else if (event.key.code == sf::Keyboard::Up)    sc.movePositionPointInSelectedFrames({0, -1});
+                else if (event.key.code == sf::Keyboard::Down)  sc.movePositionPointInSelectedFrames({0,  1});
+                else if (event.key.code == sf::Keyboard::Left)  sc.movePositionPointInSelectedFrames({-1, 0});
+                else if (event.key.code == sf::Keyboard::Right) sc.movePositionPointInSelectedFrames({ 1, 0});
+                else if (event.key.code == sf::Keyboard::K) sc.moveSelectedFrames({0, -1});
+                else if (event.key.code == sf::Keyboard::J) sc.moveSelectedFrames({0,  1});
+                else if (event.key.code == sf::Keyboard::H) sc.moveSelectedFrames({-1, 0});
+                else if (event.key.code == sf::Keyboard::L) sc.moveSelectedFrames({ 1, 0});
             }
             if (event.type == sf::Event::MouseButtonPressed) sc.mousePressed();
             if (event.type == sf::Event::MouseButtonReleased) sc.mouseReleased();
