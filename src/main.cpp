@@ -34,6 +34,9 @@ int main(int argc, char* argv[])
     while (window.isOpen())
     {
         sf::Event event;
+        sf::Vector2i position = sf::Mouse::getPosition(window);
+        sc.updateMousePosition({position.x, position.y});
+
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
@@ -43,54 +46,20 @@ int main(int argc, char* argv[])
                 if (event.key.code == sf::Keyboard::Escape) window.close();             
                 if (event.key.code == sf::Keyboard::S) sc.save();
                 if (event.key.code == sf::Keyboard::L) sc.load();
+                if (event.key.code == sf::Keyboard::Up)    sc.moveSelectedFrames({0, -1});
+                if (event.key.code == sf::Keyboard::Down)  sc.moveSelectedFrames({0,  1});
+                if (event.key.code == sf::Keyboard::Left)  sc.moveSelectedFrames({-1, 0});
+                if (event.key.code == sf::Keyboard::Right) sc.moveSelectedFrames({ 1, 0});
             }
-            if (event.type == sf::Event::MouseButtonPressed)
-            {
-                sf::Vector2i position = sf::Mouse::getPosition(window);
-                mouse_position = sf::Vector2f(position.x, position.y);
-                current_rect.position_x = mouse_position.x;
-                current_rect.position_y = mouse_position.y;
-                is_select_area = true;
-            }
-            if (event.type == sf::Event::MouseButtonReleased)
-            {
-                sf::Vector2i position = sf::Mouse::getPosition(window);
-                sf::Vector2f rect_size = sf::Vector2f(position.x, position.y) - mouse_position;
-                if (rect_size.x < 0)
-                {
-                    current_rect.position_x += rect_size.x;
-                    rect_size.x *= -1;
-                }
-                if (rect_size.y < 0)
-                {
-                    current_rect.position_y += rect_size.y;
-                    rect_size.y *= -1;
-                }
-                current_rect.size_x = rect_size.x;
-                current_rect.size_y = rect_size.y;
-                sc.addNewFrame(Frame(
-                            current_rect.position_x,
-                            current_rect.position_y,
-                            current_rect.size_x,
-                            current_rect.size_y
-                            ));
-                is_select_area = false;
-            } 
-           
+            if (event.type == sf::Event::MouseButtonPressed) sc.mousePressed();
+            if (event.type == sf::Event::MouseButtonReleased) sc.mouseReleased();
         }
 
         window.clear();
         window.draw(sprite);
 
-        if (is_select_area == true)
-        {
-            sf::Vector2i position = sf::Mouse::getPosition(window);
-            sf::Vector2f rect_size = sf::Vector2f(position.x, position.y) - mouse_position;
-            current_rect.size_x = rect_size.x;
-            current_rect.size_y = rect_size.y;
-            renderRect(window, current_rect);
-        }
-
+        if (sc.isSelectStatus())
+            renderRect(window, sc.getCurrentFrame());
         for (const auto & s : sc.getFrames())
         {
             renderRect(window, s);
@@ -104,11 +73,19 @@ int main(int argc, char* argv[])
 
 void renderRect(sf::RenderWindow &window, const Frame &frame)
 {
-    sf::Vector2f position(frame.position_x, frame.position_y);
-    sf::Vector2f size(frame.size_x, frame.size_y);
+    sf::Vector2f position(frame.position.x, frame.position.y);
+    sf::Vector2f size(frame.size.x, frame.size.y);
 
     sf::RectangleShape line;
-    line.setFillColor(sf::Color::Red);
+    if (frame.status == STATUS::PASSIVE)
+    {
+        line.setFillColor(sf::Color::Red);
+    }
+    else if (frame.status == STATUS::ACTIVE)
+    {
+        line.setFillColor(sf::Color::Green);
+    }
+
 
     //up
     line.setPosition(position);

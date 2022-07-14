@@ -1,31 +1,47 @@
 #pragma once
+#include <cmath>
+#include "enums.h"
+#include "vector2f.h"
 
 struct Frame
 {
 public:
     Frame()
     {
-        this->position_x = 0;
-        this->position_y = 0;
-        this->size_x = 0;
-        this->size_y = 0;
+        this->position = Vector2f(0, 0);
+        this->size = Vector2f(10.f, 10.f);
+        status = STATUS::PASSIVE;
     }
 
-    Frame(float position_x, float position_y, float size_x, float size_y)
+    Frame(Vector2f position, Vector2f size)
     {
-        this->position_x = position_x;
-        this->position_y = position_y;
-        this->size_x = size_x;
-        this->size_y = size_y;
+        if (size.x < 10) size.x = 10.f;
+        if (size.y < 10) size.y = 10.f;
+        this->position = position;
+        this->size = size;
+        status = STATUS::PASSIVE;
     }
 
-    ~Frame()
-    {}
+    ~Frame() {}
+
+    void move(Vector2f offset)
+    {
+        position += offset;
+        size     += offset;
+    }
+
+    void changeStatus()
+    {
+        if (status == STATUS::ACTIVE)
+            status = STATUS::PASSIVE;
+        else if (status == STATUS::PASSIVE)
+            status = STATUS::ACTIVE;
+    }
 
 public:
-    float position_x;
-    float position_y;
-    float size_x;
-    float size_y;
+    Vector2f position;
+    Vector2f size;
+    STATUS status;
 };
 
+inline Frame empty_frame = {{0, 0}, {0, 0}};
