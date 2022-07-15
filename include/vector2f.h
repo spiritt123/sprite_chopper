@@ -26,6 +26,14 @@ struct Vector2f
         return out;
     }
 
+    friend const Vector2f operator/(const Vector2f &left, float value)
+    {
+        Vector2f out;
+        out.x = left.x / value;
+        out.y = left.y / value;
+        return out;
+    }
+
     friend Vector2f operator+=(Vector2f &left, const Vector2f &right)
     {
         left.x += right.x;

@@ -165,6 +165,12 @@ void SpriteChopper::updateMousePosition(Vector2f mouse_position)
     _mouse_position = mouse_position;
     if (_is_select_area)
         _current_frame.size = _mouse_position - _current_frame.position;
+    auto it = std::find_if(_frames.begin(), _frames.end(), [](const Frame &f) {return f.status == STATUS::MOVED;});
+    if (it != _frames.end())
+    {
+        it->position = _mouse_position - it->size / 2;
+    }
+
 }
 
 void SpriteChopper::mousePressed()
@@ -175,14 +181,23 @@ void SpriteChopper::mousePressed()
         _current_frame.position = _mouse_position;
         _is_select_area = true;
     }
-    else
+    else if (fr->status == STATUS::ACTIVE)
     {
-        fr->changeStatus();
+        fr->status = STATUS::MOVED;
     }
 }
 
 void SpriteChopper::mouseReleased()
 {
+    Frame *fr = getFrameWithConsistThisTarget(_mouse_position);
+    if (fr != nullptr)
+    {
+        _current_frame.size = {0, 0};
+        _is_select_area = false;
+        fr->changeStatus();
+        return;
+    }
+
     Vector2f rect_size = _mouse_position - _current_frame.position;
     if (!_is_select_area)
         return;

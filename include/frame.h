@@ -35,6 +35,8 @@ public:
             status = STATUS::PASSIVE;
         else if (status == STATUS::PASSIVE)
             status = STATUS::ACTIVE;
+        else if (status == STATUS::MOVED)
+            status = STATUS::PASSIVE;
     }
 
 public:

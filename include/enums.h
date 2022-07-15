@@ -4,6 +4,7 @@ enum STATUS
 {
     ACTIVE,
     PASSIVE,
-    SELECTED
+    SELECTED,
+    MOVED,
 };
 
