@@ -46,6 +46,7 @@ int main(int argc, char* argv[])
                 if (event.key.code == sf::Keyboard::Escape) window.close();             
                 else if (event.key.code == sf::Keyboard::S) sc.save();
                 else if (event.key.code == sf::Keyboard::R) sc.load();
+                else if (event.key.code == sf::Keyboard::D) sc.deleteSelectedFrames();
                 else if (event.key.shift && event.key.code == sf::Keyboard::Up)    sc.moveSizePointInSelectedFrames({0, -1});
                 else if (event.key.shift && event.key.code == sf::Keyboard::Down)  sc.moveSizePointInSelectedFrames({0,  1});
                 else if (event.key.shift && event.key.code == sf::Keyboard::Left)  sc.moveSizePointInSelectedFrames({-1, 0});

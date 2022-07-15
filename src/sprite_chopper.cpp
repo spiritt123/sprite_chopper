@@ -1,4 +1,6 @@
 #include "sprite_chopper.h"
+#include <vector>
+#include <algorithm>
 
 SpriteChopper::SpriteChopper()
     :_filename("sprite_chopper.coords")
@@ -42,6 +44,16 @@ void SpriteChopper::load()
     {
         _frames.push_back({position, size});
     }
+}
+    
+void SpriteChopper::deleteSelectedFrames()
+{
+    _frames.erase(
+        std::remove_if(_frames.begin(), 
+                       _frames.end(),
+                       [](const Frame &f) { return f.status == STATUS::ACTIVE; }
+                      ), _frames.end()
+    );
 }
 
 const std::vector<Frame>& SpriteChopper::getFrames()

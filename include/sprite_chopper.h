@@ -15,6 +15,7 @@ public:
 
     void save();
     void load();
+    void deleteSelectedFrames();
 
     const std::vector<Frame>& getFrames();
     void addNewFrame(const Frame &frame);
