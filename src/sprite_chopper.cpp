@@ -103,6 +103,16 @@ void SpriteChopper::deleteSelectedFrames()
     );
 }
 
+void SpriteChopper::copyFrame()
+{
+    auto it = std::find_if(_frames.begin(), _frames.end(), [](const Frame &f) {return f.status == STATUS::ACTIVE;});
+    if (it == _frames.end())
+        return;
+    Frame copy_frame = *it;
+    copy_frame.status = STATUS::ACTIVE;
+    _frames.push_back(copy_frame);
+}
+
 const std::vector<Frame>& SpriteChopper::getFrames()
 {
     return _frames;
@@ -182,6 +192,15 @@ void SpriteChopper::mousePressed()
         _is_select_area = true;
     }
     else if (fr->status == STATUS::ACTIVE)
+    {
+        fr->status = STATUS::MOVED;
+    }
+}
+
+void SpriteChopper::mousePressedForMove()
+{
+    Frame *fr = getFrameWithConsistThisTarget(_mouse_position);
+    if (fr != nullptr)
     {
         fr->status = STATUS::MOVED;
     }

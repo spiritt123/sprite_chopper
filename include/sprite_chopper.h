@@ -21,6 +21,7 @@ public:
 
     const std::vector<Frame>& getFrames();
     void addNewFrame(const Frame &frame);
+    void copyFrame();
 
     void moveSelectedFrames(Vector2f offset);
     void movePositionPointInSelectedFrames(Vector2f offset);
@@ -31,6 +32,7 @@ public:
 
     void updateMousePosition(Vector2f mouse_position);
     void mousePressed();
+    void mousePressedForMove();
     void mouseReleased();
 
     Frame* getFrameWithConsistThisTarget(Vector2f target);

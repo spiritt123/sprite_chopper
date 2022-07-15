@@ -10,6 +10,22 @@ sf::Vector2f operator*(const sf::Vector2f &left, const sf::Vector2f &right)
     return sf::Vector2f(left.x * right.x, left.y * right.y);
 }
 
+enum STATES
+{
+    SELECT,
+    MOVE
+};
+
+STATES state_window = STATES::SELECT;
+
+void changeStateWindow()
+{
+    if (state_window == STATES::SELECT)
+        state_window = STATES::MOVE;
+    else
+        state_window = STATES::SELECT;
+}
+
 void renderRect(sf::RenderWindow &window, const Frame &frame);
 
 int main(int argc, char* argv[])
@@ -48,6 +64,8 @@ int main(int argc, char* argv[])
                 else if (event.key.alt && event.key.code == sf::Keyboard::S) sc.saveToXml();
                 else if (event.key.code == sf::Keyboard::S) sc.save();
                 else if (event.key.code == sf::Keyboard::R) sc.load();
+                else if (event.key.code == sf::Keyboard::Q) changeStateWindow();
+                else if (event.key.code == sf::Keyboard::C) sc.copyFrame();
                 else if (event.key.code == sf::Keyboard::D) sc.deleteSelectedFrames();
                 else if (event.key.shift && event.key.code == sf::Keyboard::Up)    sc.moveSizePointInSelectedFrames({0, -1});
                 else if (event.key.shift && event.key.code == sf::Keyboard::Down)  sc.moveSizePointInSelectedFrames({0,  1});
@@ -62,7 +80,13 @@ int main(int argc, char* argv[])
                 else if (event.key.code == sf::Keyboard::H) sc.moveSelectedFrames({-1, 0});
                 else if (event.key.code == sf::Keyboard::L) sc.moveSelectedFrames({ 1, 0});
             }
-            if (event.type == sf::Event::MouseButtonPressed) sc.mousePressed();
+            if (event.type == sf::Event::MouseButtonPressed) 
+            {
+                if (state_window == STATES::SELECT)
+                    sc.mousePressed();
+                else 
+                    sc.mousePressedForMove();
+            }
             if (event.type == sf::Event::MouseButtonReleased) sc.mouseReleased();
         }
 
@@ -96,7 +120,10 @@ void renderRect(sf::RenderWindow &window, const Frame &frame)
     {
         line.setFillColor(sf::Color::Green);
     }
-
+    else if (frame.status == STATUS::MOVED)
+    {
+        line.setFillColor(sf::Color::Yellow);
+    }
 
     //up
     line.setPosition(position);
