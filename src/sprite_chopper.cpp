@@ -3,7 +3,7 @@
 #include <algorithm>
 
 SpriteChopper::SpriteChopper()
-    :_filename("sprite_chopper.coords")
+    :_filename("sprite_chopper")
 {
     _is_select_area = false;
 }
@@ -19,20 +19,67 @@ SpriteChopper::~SpriteChopper()
 
 void SpriteChopper::save()
 {
-    std::ofstream ofs(_filename, std::ios::out | std::ios::binary);
-    for (const auto &s : _frames)
+    std::ofstream ofs(_filename + ".coords", std::ios::out | std::ios::binary);
+    for (const auto &f : _frames)
     {
-        ofs.write((const char*) &s.position.x, sizeof(float));
-        ofs.write((const char*) &s.position.y, sizeof(float));
-        ofs.write((const char*) &s.size.x, sizeof(float));
-        ofs.write((const char*) &s.size.y, sizeof(float));
+        ofs.write((const char*) &f.position.x, sizeof(float));
+        ofs.write((const char*) &f.position.y, sizeof(float));
+        ofs.write((const char*) &f.size.x, sizeof(float));
+        ofs.write((const char*) &f.size.y, sizeof(float));
     }
+    ofs.close();
+}
+
+void SpriteChopper::saveToXml()
+{
+    std::ofstream ofs(_filename + ".xml", std::ios::out);
+    std::string out = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+    out += "<array>\n";
+    for (const auto &f : _frames)
+    {
+        out += "<frame>\n";
+        out += "\t<position>\n";
+        out += "\t\t<x>" + std::to_string(f.position.x) + "<\\x>\n";
+        out += "\t\t<y>" + std::to_string(f.position.y) + "<\\y>\n";
+        out += "\t<\\position>\n";
+        out += "\t<size>\n";
+        out += "\t\t<x>" + std::to_string(f.size.x) + "<\\x>\n";
+        out += "\t\t<y>" + std::to_string(f.size.y) + "<\\y>\n";
+        out += "\t<\\size>\n";
+        out += "<\\frame>\n";
+    }
+    out += "<\\array>";
+    ofs << out;
+    ofs.close();
+}
+
+void SpriteChopper::saveToJson()
+{
+    std::ofstream ofs(_filename + ".json", std::ios::out);
+    std::string out = "[";
+    for (const auto &f : _frames)
+    {
+        out += "{\n";
+        out += "\t\"position\" : {\n";
+        out += "\t\t\"x\" : " + std::to_string(f.position.x) + ",\n";
+        out += "\t\t\"y\" : " + std::to_string(f.position.y) + "\n";
+        out += "\t},\n";
+        out += "\t\"size\" : {\n";
+        out += "\t\t\"x\" : " + std::to_string(f.size.x) + ",\n";
+        out += "\t\t\"y\" : " + std::to_string(f.size.y) + "\n";
+        out += "\t}\n";
+        out += "},\n";
+    }
+    out.pop_back();
+    out.pop_back();
+    out += "]";
+    ofs << out;
     ofs.close();
 }
 
 void SpriteChopper::load()
 {
-    std::ifstream ifs(_filename, std::ios::binary | std::ios::in);
+    std::ifstream ifs(_filename + ".coords", std::ios::binary | std::ios::in);
     _frames.clear();
     Vector2f position;
     Vector2f size;

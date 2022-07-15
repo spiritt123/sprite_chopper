@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
     sf::RenderWindow window(sf::VideoMode(900, 900), "Frame_chopper");
     window.setFramerateLimit(30);
 
-    std::string filename = "frames.coords";
+    std::string filename = "frames";
     SpriteChopper sc(filename);
     sf::Texture texture;
     if (!texture.loadFromFile("sprite.png"))
@@ -44,6 +44,8 @@ int main(int argc, char* argv[])
             if (event.type == sf::Event::KeyPressed)
             {
                 if (event.key.code == sf::Keyboard::Escape) window.close();             
+                else if (event.key.shift && event.key.code == sf::Keyboard::S) sc.saveToJson();
+                else if (event.key.alt && event.key.code == sf::Keyboard::S) sc.saveToXml();
                 else if (event.key.code == sf::Keyboard::S) sc.save();
                 else if (event.key.code == sf::Keyboard::R) sc.load();
                 else if (event.key.code == sf::Keyboard::D) sc.deleteSelectedFrames();

@@ -14,6 +14,8 @@ public:
     ~SpriteChopper();
 
     void save();
+    void saveToXml();
+    void saveToJson();
     void load();
     void deleteSelectedFrames();
 
